@@ -1,15 +1,19 @@
 import express from 'express';
 import fetch from 'node-fetch';
-import cors from 'cors'; // This should work now
+import cors from 'cors';
 
 const app = express();
-const PORT = 5004; // Choose a port for your server
+const PORT = 5004;
 
-app.use(cors()); // Allow all origins
+// Enable CORS to allow requests from your frontend
+app.use(cors());
 
+// CoinMarketCap API key
+const apiKey = '55546c6e-71b0-4bb6-8470-85196f7762e3'; // Replace with your actual API key
+
+// Existing API endpoint for general cryptocurrency data
 app.get('/api/cryptocurrency', async (req, res) => {
   const apiUrl = 'https://pro-api.coinmarketcap.com/v1/cryptocurrency/listings/latest';
-  const apiKey = '55546c6e-71b0-4bb6-8470-85196f7762e3'; // Replace with your CoinMarketCap API key
 
   try {
     const response = await fetch(apiUrl, {
@@ -26,8 +30,27 @@ app.get('/api/cryptocurrency', async (req, res) => {
   }
 });
 
+// New API endpoint for fetching data of a specific cryptocurrency by ID
+app.get('/api/cryptocurrency/:id', async (req, res) => {
+  const { id } = req.params;
+  const apiUrl = `https://pro-api.coinmarketcap.com/v1/cryptocurrency/quotes/latest?id=${id}`;
+
+  try {
+    const response = await fetch(apiUrl, {
+      headers: {
+        'X-CMC_PRO_API_KEY': apiKey,
+        'Accept': 'application/json'
+      }
+    });
+    const data = await response.json();
+    res.json(data);
+  } catch (error) {
+    console.error(`Error fetching data for coin ID ${id}:`, error);
+    res.status(500).send('Error fetching data for specified coin');
+  }
+});
+
+// Start the server
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
-
-
