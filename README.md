@@ -1,5 +1,5 @@
 # Crypto-Backend
 
-To tun the code, run following commands inside the folder -
+To run the code, run following commands inside the folder -
 npm install
 node server.mjs 
