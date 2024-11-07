@@ -45,10 +45,11 @@ app.get('/api/cryptocurrency/:id', async (req, res) => {
     const data = await response.json();
     res.json(data);
   } catch (error) {
-    console.error(`Error fetching data for coin ID ${id}:`, error);
-    res.status(500).send('Error fetching data for specified coin');
+    console.error('Error fetching data:', error);
+    res.status(500).send('Error fetching data');
   }
 });
+
 
 // Start the server
 app.listen(PORT, () => {
